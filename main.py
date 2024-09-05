@@ -1,10 +1,13 @@
 import datetime
+from itertools import count
+
 
 class Main:
     dict_tasks = []
 
     # Инициализация
     def __init__(self):
+        self.value_tasks = None
         self.tasks = None
         self.bools = None
 
@@ -12,8 +15,8 @@ class Main:
     def add_tasks(self, tasks):
         self.tasks = tasks
         if isinstance(tasks, str):
-           self.bools = True
-           return True
+            self.bools = True
+            return True
         else:
             print("Попробуй еще раз. Ты что-то ввел не так")
             self.bools = False
@@ -34,6 +37,7 @@ class Main:
 
     # Функция чтения задач из списка dict_tasks
     def read_tasks(self):
+        count = 1
         if len(self.dict_tasks) > 0:
             for i in self.dict_tasks:
                 if len(i.split('.')) == 3:
@@ -41,15 +45,31 @@ class Main:
                         datetime.datetime.strptime(i, '%d.%m.%Y')
                         print("Срок задачи: " + i)
                     except BaseException:
-                        print('неверный формат')
+                        print(
+                            f'ВНИМАНИЕ: НЕ ВЕРНЫЙ ФОРМАТ. Задача выше ⬆️⬆️⬆️ по Дате ==> "{i}", была удалена из-за не логичности.'
+                            f'\nПожалуйста, исправьте это')
+                        self.dict_tasks.remove(i)
+                        self.dict_tasks.pop()
                 else:
-                    print("Описание задачи: " + i)
+                    print(f"{count}. Описание задачи: " + i)
+                    count = count + 1
+
         else:
             print("У вас пока что нет, ни одной задачи")
 
     # Функция удаления задач из списка dict_tasks
     def del_tasks(self, del_value):
         self.dict_tasks.remove(del_value)
+
+    def redaction_tasks(self):
+
+        print("\nВыбери задачу для редактирования\n")
+        self.read_tasks()
+        key_value = input("Ввод: ")
+        print("Мы вошли в задачу. Можешь редактировать")
+        new_tasks = input("Ввод: ")
+        self.dict_tasks[int(key_value)] = new_tasks
+
 
 
 if __name__ == '__main__':
@@ -84,7 +104,7 @@ if __name__ == '__main__':
             case 2:
                 main.read_tasks()
             case 3:
-                pass
+                main.redaction_tasks()
             case 4:
                 value = input("Введи номер задачи, которую хочешь удалить: ")
                 main.del_tasks(value)

@@ -107,5 +107,4 @@ if __name__ == '__main__':
                 value = input("Введи номер задачи, которую хочешь удалить: ")
                 main.del_tasks(value)
             case 5:
-                print(main.dict_tasks)
                 exit()

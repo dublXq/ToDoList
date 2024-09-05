@@ -1,6 +1,4 @@
 import datetime
-from itertools import count
-
 
 class Main:
     dict_tasks = []

@@ -43,10 +43,7 @@ class Main:
             cls.bools = False
             return False
 
-
-
-        # Функция чтения задач из списка dict_tasks
-
+    # Функция чтения задач из списка dict_tasks
     def read_tasks(self):
         count = 1
         if len(self.dict_tasks) > 0:
@@ -72,14 +69,19 @@ class Main:
     def del_tasks(self, del_value):
         self.dict_tasks.remove(del_value)
 
+    # Функция редактирования задач из списка dict_tasks
     def redaction_tasks(self):
 
-        print("\nВыбери задачу для редактирования\n")
-        self.read_tasks()
-        key_value = input("Ввод: ")
-        print("Мы вошли в задачу. Можешь редактировать")
-        new_tasks = input("Ввод текста: ")
-        self.dict_tasks[int(key_value)] = new_tasks
+        if len(self.dict_tasks) > 1:
+            print("\nВыбери задачу для редактирования\n")
+            self.read_tasks()
+            key_value = int(input("Ввод: "))
+            print("Мы вошли в задачу. Можешь редактировать")
+            key_value += -1
+            new_tasks = input("Ввод текста: ")
+            self.dict_tasks[key_value] = new_tasks
+        else:
+            print("Ошибка: На данный момент, у вас нет задач. Добавьте свою первую задачу, нажав на 1, в модуле выбора :)")
 
 
 if __name__ == '__main__':

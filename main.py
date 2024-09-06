@@ -1,4 +1,3 @@
-
 """Импорт datetime, для реализации форматирования вывода чтения задач"""
 import datetime
 
@@ -12,7 +11,7 @@ class Main:
         self.tasks = None
         self.bools = None
 
-    #Функция добавление задачи в список dict_tasks
+    # Функция добавление задачи в список dict_tasks
     def add_tasks(self, tasks):
         self.tasks = tasks
         if isinstance(tasks, str):
@@ -27,16 +26,27 @@ class Main:
     @classmethod
     def time_tasks(cls, time):
         cls.time = time
-        cls.time = time.replace(" ", ".")  # Убираем пробелы из строки
-        if len(time.split('.')) == 3:
+
+        if time[2] == " " and time[5] == " ":
+            cls.time = time.replace(" ", ".")  # Убираем пробелы из строки
             cls.bools = True
-            return True
+            return cls.time
+        elif time[2] == "-" and time[5] == "-":
+            cls.time = time.replace("-", ".")  # Убираем тире из строки
+            cls.bools = True
+            return cls.time
+        elif time[2] == "." and time[5] == ".":
+            cls.bools = True
+            return cls.time
         else:
             print("Не верный формат даты")
             cls.bools = False
             return False
 
-    # Функция чтения задач из списка dict_tasks
+
+
+        # Функция чтения задач из списка dict_tasks
+
     def read_tasks(self):
         count = 1
         if len(self.dict_tasks) > 0:
@@ -68,9 +78,8 @@ class Main:
         self.read_tasks()
         key_value = input("Ввод: ")
         print("Мы вошли в задачу. Можешь редактировать")
-        new_tasks = input("Ввод: ")
+        new_tasks = input("Ввод текста: ")
         self.dict_tasks[int(key_value)] = new_tasks
-
 
 
 if __name__ == '__main__':
@@ -97,11 +106,14 @@ if __name__ == '__main__':
             case 1:
                 value = input("Введи описание задачи: ")
                 value_2 = input("Введи срок выполнения: ")
-
-                if main.add_tasks(value) == True and main.time_tasks(value_2) == True:
-                    main.dict_tasks.append(value)
-                    main.dict_tasks.append(value_2)
-                    print("Задача успешно добавлена")
+                if main.add_tasks(value) is True:
+                    formatted_date = main.time_tasks(value_2)
+                    if formatted_date is not False:
+                        main.dict_tasks.append(value)
+                        main.dict_tasks.append(formatted_date)
+                        print("Задача успешно добавлена")
+                else:
+                    print("Ошибка: Сбой в системе. Задача не была добавлена")
             case 2:
                 main.read_tasks()
             case 3:
@@ -110,4 +122,4 @@ if __name__ == '__main__':
                 value = input("Введи номер задачи, которую хочешь удалить: ")
                 main.del_tasks(value)
             case 5:
-                exit()
+                break

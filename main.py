@@ -3,7 +3,8 @@ import datetime
 
 
 class Main:
-    dict_tasks = []
+    dictionary_tasks = {}
+    dictionary_time = {}
 
     # Инициализация
     def __init__(self):
@@ -11,7 +12,7 @@ class Main:
         self.tasks = None
         self.bools = None
 
-    # Функция добавление задачи в список dict_tasks
+    # Функция добавление задачи в словарь dictionary_tasks
     def add_tasks(self, tasks):
         self.tasks = tasks
         if isinstance(tasks, str):
@@ -22,7 +23,7 @@ class Main:
             self.bools = False
             return False
 
-    # Метод класса, который выполняет дополнительную функцию, к функции add_tasks
+    # Метод класса, который выполняет дополнительную функцию, к методу dictionary_tasks
     @classmethod
     def time_tasks(cls, time):
         cls.time = time
@@ -43,43 +44,52 @@ class Main:
             cls.bools = False
             return False
 
-    # Функция чтения задач из списка dict_tasks
-    def read_tasks(self):
-        count = 1
-        if len(self.dict_tasks) > 0:
-            for i in self.dict_tasks:
-                if len(i.split('.')) == 3:
-                    try:
-                        datetime.datetime.strptime(i, '%d.%m.%Y')
-                        print("Срок задачи: " + i)
-                    except ValueError:
-                        print(
-                            f'ВНИМАНИЕ: НЕ ВЕРНЫЙ ФОРМАТ. Задача выше ⬆️⬆️⬆️ по Дате ==> "{i}", была удалена из-за не логичности.'
-                            f'\nПожалуйста, исправьте это')
-                        self.dict_tasks.remove(i)
-                        self.dict_tasks.pop()
-                else:
-                    print(f"{count}. Описание задачи: " + i)
-                    count = count + 1
+    # Функция чтения задач из словаря dictionary_tasks
+    def read_tasks(self) -> None:
 
+        count = 1
+
+        if len(self.dictionary_tasks) > 0 and len(self.dictionary_time) > 0:
+            for element_task in self.dictionary_tasks.values():
+                print(f"{count}.\nОписание задачи: " + element_task)
+                for element_time in self.dictionary_time.values():
+                    if len(element_time.split('.')) == 3:
+                        try:
+                            datetime.datetime.strptime(element_time, '%d.%m.%Y')
+                            print("Срок задачи: " + self.dictionary_time[count])
+                            count += 1
+                            break
+                        except ValueError:
+                            print(f'ВНИМАНИЕ: НЕ ВЕРНЫЙ ФОРМАТ. Задача выше ⬆️⬆️⬆️ по Дате ==> "{element_time}", была удалена из-за не логичности.'
+                                f'\nПожалуйста, исправьте это')
+                            self.dictionary_tasks.pop(element_time)
+                            self.dictionary_time.pop(element_time)
         else:
             print("У вас пока что нет, ни одной задачи")
 
-    # Функция удаления задач из списка dict_tasks
-    def del_tasks(self, del_value):
-        self.dict_tasks.remove(del_value)
+    # Функция удаления задач из словаря dictionary_tasks
+    def del_tasks(self):
+        if len(self.dictionary_tasks) >= 1:
+            print("\nВыберите задачу для удаления\n")
+            self.read_tasks()
+            key_value = int(input("Ввод: "))
+            if int(key_value) <= len(main.dictionary_tasks):
+                self.dictionary_tasks.pop(key_value)
+                self.dictionary_time.pop(key_value)
+        else:
+            print("У вас пока что нет, ни одной задачи")
 
-    # Функция редактирования задач из списка dict_tasks
+    # Функция редактирования задач из словаря dictionary_tasks
     def redaction_tasks(self):
 
-        if len(self.dict_tasks) > 1:
+        if len(self.dictionary_tasks) >= 1:
             print("\nВыбери задачу для редактирования\n")
             self.read_tasks()
             key_value = int(input("Ввод: "))
             print("Мы вошли в задачу. Можешь редактировать")
-            key_value += -1
             new_tasks = input("Ввод текста: ")
-            self.dict_tasks[key_value] = new_tasks
+            self.dictionary_tasks[key_value] = new_tasks
+            print("Задача была успешно отредактирована :)")
         else:
             print("Ошибка: На данный момент, у вас нет задач. Добавьте свою первую задачу, нажав на 1, в модуле выбора :)")
 
@@ -111,8 +121,9 @@ if __name__ == '__main__':
                 if main.add_tasks(value) is True:
                     formatted_date = main.time_tasks(value_2)
                     if formatted_date is not False:
-                        main.dict_tasks.append(value)
-                        main.dict_tasks.append(formatted_date)
+                        i = len(main.dictionary_tasks) + 1
+                        main.dictionary_tasks[i] = value
+                        main.dictionary_time[i] = formatted_date
                         print("Задача успешно добавлена")
                 else:
                     print("Ошибка: Сбой в системе. Задача не была добавлена")
@@ -121,7 +132,6 @@ if __name__ == '__main__':
             case 3:
                 main.redaction_tasks()
             case 4:
-                value = input("Введи номер задачи, которую хочешь удалить: ")
-                main.del_tasks(value)
+                main.del_tasks()
             case 5:
                 break

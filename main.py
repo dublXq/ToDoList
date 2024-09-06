@@ -1,4 +1,7 @@
+
+"""Импорт datetime, для реализации форматирования вывода чтения задач"""
 import datetime
+
 
 class Main:
     dict_tasks = []
@@ -9,7 +12,7 @@ class Main:
         self.tasks = None
         self.bools = None
 
-    # Функция добавление задачи в список dict_tasks
+    #Функция добавление задачи в список dict_tasks
     def add_tasks(self, tasks):
         self.tasks = tasks
         if isinstance(tasks, str):
@@ -42,7 +45,7 @@ class Main:
                     try:
                         datetime.datetime.strptime(i, '%d.%m.%Y')
                         print("Срок задачи: " + i)
-                    except BaseException:
+                    except ValueError:
                         print(
                             f'ВНИМАНИЕ: НЕ ВЕРНЫЙ ФОРМАТ. Задача выше ⬆️⬆️⬆️ по Дате ==> "{i}", была удалена из-за не логичности.'
                             f'\nПожалуйста, исправьте это')
